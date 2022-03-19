@@ -1,5 +1,6 @@
 import { UnauthorizedError } from '../helpers/exceptions.js'
 import UserService from '../services/user.js'
+const COOKIE_OPTIONS  = { httpOnly: true, maxAge: 30*24*60*60*1000 }
 
 class UserController {
   
@@ -17,7 +18,7 @@ class UserController {
   async registration(req, res, next) {
     try {
       const data = await UserService.registration(req.body)
-      res.cookie('refreshToken', data.refreshToken, { httpOnly: true, maxAge: 30*24*60*60*1000 })
+      res.cookie('refreshToken', data.refreshToken, COOKIE_OPTIONS)
       res.status(201).json(data) 
     }catch (e) {
       next(e)
@@ -39,7 +40,7 @@ class UserController {
   async login (req, res, next) {
     try {
       const data = await UserService.login(req.body)
-      res.cookie('refreshToken', data.refreshToken, { httpOnly: true, maxAge: 30*24*60*60*1000 })
+      res.cookie('refreshToken', data.refreshToken, COOKIE_OPTIONS)
       res.status(200).json(data) 
     }catch (e) {
       next(e)
@@ -63,6 +64,7 @@ class UserController {
       if (!refreshToken) 
         throw new UnauthorizedError()
       const data = await UserService.refresh(refreshToken) 
+      res.cookie('refreshToken', data.refreshToken, COOKIE_OPTIONS)
       res.json(data)
     } catch(e) {
       next(e)

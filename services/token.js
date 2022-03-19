@@ -18,6 +18,12 @@ class TokenService {
       process.env.JWT_REFRESH_TOKEN_SECRET
     )
   }
+  validateAccessToken(token) {
+    return jwt.verify(
+      token,
+      process.env.JWT_ACCESS_TOKEN_SECRET
+    )
+  }
 
 
   async saveToken({userId, token}) {
