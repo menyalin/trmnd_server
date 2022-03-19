@@ -1,3 +1,4 @@
+import { UnauthorizedError } from '../helpers/exceptions.js'
 import UserService from '../services/user.js'
 
 class UserController {
@@ -55,6 +56,20 @@ class UserController {
       next(e)
     }
   }
+
+  async refresh(req, res, next) {
+    try {
+      const { refreshToken } = req.cookies  
+      if (!refreshToken) 
+        throw new UnauthorizedError()
+      const data = await UserService.refresh(refreshToken) 
+      res.json(data)
+    } catch(e) {
+      next(e)
+    }
+  }
+
+
 }
 
 export default new UserController()

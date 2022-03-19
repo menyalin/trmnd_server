@@ -1,6 +1,6 @@
 import UserModel from '../models/user.js'
 import TokenService from './token.js'
-import {BadRequestError} from '../helpers/exceptions.js'
+import { BadRequestError } from '../helpers/exceptions.js'
 
 class UserDTO {
   constructor({_id, name}) {
@@ -8,8 +8,6 @@ class UserDTO {
     this.name = name
   }
 }
-
-
 
 class UserService {
   
@@ -38,6 +36,10 @@ class UserService {
     await TokenService.remove(token)
     return null
   } 
+  
+  async refresh(token) {
+    console.log(token)
+  }
 
 
 

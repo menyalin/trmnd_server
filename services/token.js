@@ -1,17 +1,24 @@
-
 import jwt from 'jsonwebtoken'
 import TokenModel from '../models/token.js'
 
 class TokenService {
-  async generate(payload) {
-    const accessToken = await jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET, {
+  generate(payload) {
+    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_TOKEN_SECRET, {
       expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRESIN
     } )
-    const refreshToken = await jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET, {
+    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_TOKEN_SECRET, {
       expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRESIN
     } )
     return { accessToken, refreshToken }
   }
+
+  validateRefreshToken(token) {
+    return jwt.verify(
+      token,
+      process.env.JWT_REFRESH_TOKEN_SECRET
+    )
+  }
+
 
   async saveToken({userId, token}) {
     const existToken = await TokenModel.findOne({user: userId})
