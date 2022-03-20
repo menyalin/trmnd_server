@@ -8,6 +8,7 @@ const  router = new Router()
 router.get('/users', [jwtAuth], userCtrl.getUsers)
 router.get('/files/:name', [jwtAuth], fileCtrl.getFileByName)
 router.get('/files', [jwtAuth], fileCtrl.getFiles)
+router.get('/control', fileCtrl.accessControl)
 
 router.post('/refresh', userCtrl.refresh)
 router.post('/registration', [bodyValidator(userCtrl.registrationSchema())], userCtrl.registration)

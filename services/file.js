@@ -1,3 +1,4 @@
+import { UnauthorizedError } from '../helpers/exceptions.js'
 import FileModel from '../models/file.js'
 
 class FileService {
@@ -5,7 +6,7 @@ class FileService {
     const files = await FileModel.find({owner: user}).lean()
     return files
   }
-  
+
   async getFile({ user, name} ) {
     const file = await FileModel.findOne({owner: user, name}).lean()
     return file
@@ -20,6 +21,12 @@ class FileService {
       link: `/static/${user}/${file.originalname}`
     })
     return newFileItem
+  }
+
+  async checkAccess({link, user}) {
+    const file = await FileModel.findOne({link, owner: user}).lean()
+    if (!file) throw new UnauthorizedError('access denied')
+    return null
   }
 
 }
