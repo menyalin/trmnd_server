@@ -20,7 +20,7 @@ class UserService {
 
   async registration({name, password}) {
     const existUser = await UserModel.findOne({name}).lean()
-    if (existUser) throw new BadRequestError('User with the same name is already registered ')
+    if (existUser) throw new BadRequestError('User with the same name is already registered')
     const newUser = await UserModel.create({name, password})
     const data = await this._getAuthResponse(newUser)
     return data
@@ -45,7 +45,11 @@ class UserService {
     const updatedUser = await UserModel.findById(userData._id).lean()
     const data = await this._getAuthResponse(updatedUser)
     return data
+  }
 
+  async geUsers() {
+    const users = await UserModel.find()
+    return users
   }
 
 

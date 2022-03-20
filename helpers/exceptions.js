@@ -1,15 +1,24 @@
 export class BadRequestError extends Error {
   constructor(error) {
     super(error)
-    this.data = error
-    this.statusCode = 400
+    this.status = 400
   }
 }
 
 export class UnauthorizedError extends Error {
   constructor(error) {
     super(error)
-    this.data = error
-    this.statusCode = 401
+    this.status = 401
+    
   } 
 }
+
+export class ConflictError extends Error {
+  constructor(error) {
+    super(error)
+    this.status = 409
+  } 
+}
+
+
+

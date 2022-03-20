@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken'
+import { UnauthorizedError } from '../helpers/exceptions.js'
 import TokenModel from '../models/token.js'
 
 class TokenService {
@@ -13,16 +14,25 @@ class TokenService {
   }
 
   validateRefreshToken(token) {
-    return jwt.verify(
-      token,
-      process.env.JWT_REFRESH_TOKEN_SECRET
-    )
+    try {
+      return jwt.verify(
+        token,
+        process.env.JWT_REFRESH_TOKEN_SECRET
+      )  
+    } catch (e) {
+      throw new UnauthorizedError(e.message)
+    }
   }
   validateAccessToken(token) {
-    return jwt.verify(
-      token,
-      process.env.JWT_ACCESS_TOKEN_SECRET
-    )
+    try {
+      return jwt.verify(
+        token,
+        process.env.JWT_ACCESS_TOKEN_SECRET
+      )
+    } catch (e) {
+      throw new UnauthorizedError(e.message)
+    }
+    
   }
 
 

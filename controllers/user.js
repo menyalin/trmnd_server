@@ -1,6 +1,5 @@
-import { UnauthorizedError } from '../helpers/exceptions.js'
 import UserService from '../services/user.js'
-const COOKIE_OPTIONS  = { httpOnly: true, maxAge: 30*24*60*60*1000 }
+const COOKIE_OPTIONS  = { httpOnly: true, maxAge: 30*24*60*60*1000, secure: true }
 
 class UserController {
   
@@ -61,14 +60,22 @@ class UserController {
   async refresh(req, res, next) {
     try {
       const { refreshToken } = req.cookies  
-      if (!refreshToken) 
-        throw new UnauthorizedError()
       const data = await UserService.refresh(refreshToken) 
       res.cookie('refreshToken', data.refreshToken, COOKIE_OPTIONS)
       res.json(data)
     } catch(e) {
       next(e)
     }
+  }
+
+  async getUsers(req, res, next) {
+    try {
+      const data = await UserService.geUsers()
+      res.json(data)
+    } catch(e) {
+      next(e)
+    }
+
   }
 
 
