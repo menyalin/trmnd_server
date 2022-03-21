@@ -23,12 +23,6 @@ class FileService {
     return newFileItem
   }
 
-  async checkAccess({link, user}) {
-    const file = await FileModel.findOne({link, owner: user}).lean()
-    if (!file) throw new UnauthorizedError('access denied')
-    return null
-  }
-
 }
 
 export default new FileService()

@@ -1,3 +1,4 @@
+import { UnauthorizedError } from '../helpers/exceptions.js'
 import FileService from '../services/file.js'
 import TokenService from '../services/token.js'
 
@@ -22,11 +23,13 @@ class  FileController {
   
   async accessControl(req, res, next) {
     try {
-      const fileLink = req.headers['x-original-uri']
+      const fileLink = req.header('x-original-uri')
+      const owner = fileLink.split('/')[2]
       const {refreshToken} = req.cookies
       const user = TokenService.validateRefreshToken(refreshToken)
-      await FileService.checkAccess({link: fileLink, user: user._id})
-      res.sendStatus(200)
+      if (user._id === owner)
+        res.sendStatus(200)
+      else throw UnauthorizedError()
     } catch (e) {
       next(e)
     }
